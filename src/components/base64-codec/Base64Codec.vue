@@ -65,7 +65,7 @@ export default {
 
 <style scoped>
   #base64-codec {
-    padding: 50px;
+    padding: 50px 5vw;
   }
 
   .base64-codec-form {
