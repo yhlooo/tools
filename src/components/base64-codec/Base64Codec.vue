@@ -2,7 +2,11 @@
   <div id="base64-codec">
     <h1>Base64 编解码器</h1>
     <el-form class="base64-codec-form">
-      <el-form-item label="原始文本：">
+      <el-form-item>
+        <label class="el-form-item__label">
+          原始文本：
+          <i title="复制" class="el-icon-copy-document copy-btn" :data-clipboard-text="sourceText"></i>
+        </label>
         <el-input
           type="textarea"
           :rows="4"
@@ -11,7 +15,11 @@
           @input="b64Text = base64Codec(sourceText, 'encode') !== null ? base64Codec(sourceText, 'encode') : b64Text">
         </el-input>
       </el-form-item>
-      <el-form-item label="Base64文本：">
+      <el-form-item>
+        <label class="el-form-item__label">
+          Base64 文本：
+          <i title="复制" class="el-icon-copy-document copy-btn" :data-clipboard-text="b64Text"></i>
+        </label>
         <el-input
           type="textarea"
           :rows="4"
@@ -26,14 +34,18 @@
 
 <script>
 import { Base64 } from 'js-base64'
+import Clipboard from 'clipboard'
 
 export default {
   name: 'Base64Codec',
   data () {
     return {
       sourceText: '',
-      b64Text: ''
+      b64Text: '',
+      clipboard: new Clipboard('.copy-btn')
     }
+  },
+  mounted () {
   },
   methods: {
     base64Codec (value, action) {
@@ -70,5 +82,12 @@ export default {
 
   .base64-codec-form {
     max-width: 500px;
+  }
+
+  .copy-btn:hover {
+    /*color: black;*/
+    /*font-size: 105%;*/
+    font-weight: bolder;
+    cursor: pointer;
   }
 </style>
