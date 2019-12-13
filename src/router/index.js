@@ -1,15 +1,35 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
+import Index from '@/components/index/Index'
+import Base64Codec from '@/components/base64-codec/Base64Codec'
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   routes: [
     {
       path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld
+      name: 'Index',
+      component: Index
+    }, {
+      path: '/base64-codec',
+      name: 'Base64Codec',
+      component: Base64Codec,
+      meta: {
+        title: 'Base64 在线编解码'
+      }
     }
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  // 路由发生变化修改页面title
+  if (to.meta.title) {
+    document.title = `${to.meta.title} - KeybrL's Tools`
+  } else {
+    document.title = 'KeybrL\'s Tools'
+  }
+  next()
+})
+
+export default router
