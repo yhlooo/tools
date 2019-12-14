@@ -1,7 +1,9 @@
 <template>
   <div id="index">
     <ul>
-      <li><el-link @click="switchToTools('base64-codec')">Base64 在线编解码</el-link></li>
+      <li v-for="tool in tools" :key="tool.name">
+        <el-link :title="tool.title" @click="switchToTools(tool.url)">{{ tool.title }}</el-link>
+      </li>
     </ul>
   </div>
 </template>
@@ -9,12 +11,22 @@
 <script>
 export default {
   name: 'Index',
+  data () {
+    return {
+      tools: [{
+        name: 'Base64Codec',
+        title: 'Base64 编解码器',
+        url: '/base64-codec'
+      }, {
+        name: 'Fate',
+        title: '命运',
+        url: '/fate'
+      }]
+    }
+  },
   methods: {
-    switchToTools (toolName) {
-      console.log(toolName)
-      if (['base64-codec'].indexOf(toolName) !== -1) {
-        this.$router.push(toolName)
-      }
+    switchToTools (toolUrl) {
+      this.$router.push(toolUrl)
     }
   }
 }

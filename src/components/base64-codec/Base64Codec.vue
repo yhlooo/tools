@@ -1,6 +1,6 @@
 <template>
-  <div id="base64-codec">
-    <h1>Base64 编解码器</h1>
+  <div id="base64-codec" class="tool-main-normal">
+    <h1 class="tool-h1-normal">Base64 编解码器</h1>
     <el-form class="base64-codec-form">
       <el-form-item>
         <label class="el-form-item__label">
@@ -9,8 +9,8 @@
         </label>
         <el-input
           type="textarea"
-          :rows="4"
           placeholder="Hello World!"
+          :autosize="{ minRows: 4 }"
           v-model="sourceText"
           @input="b64Text = base64Codec(sourceText, 'encode') !== null ? base64Codec(sourceText, 'encode') : b64Text">
         </el-input>
@@ -22,8 +22,8 @@
         </label>
         <el-input
           type="textarea"
-          :rows="4"
           placeholder="SGVsbG8gV29ybGQh"
+          :autosize="{ minRows: 4 }"
           v-model="b64Text"
           @input="sourceText = base64Codec(b64Text, 'decode') !== null ? base64Codec(b64Text, 'decode') : sourceText">
         </el-input>
@@ -76,17 +76,12 @@ export default {
 </script>
 
 <style scoped>
-  #base64-codec {
-    padding: 50px 5vw;
-  }
 
   .base64-codec-form {
-    max-width: 500px;
+    /*max-width: 500px;*/
   }
 
   .copy-btn:hover {
-    /*color: black;*/
-    /*font-size: 105%;*/
     font-weight: bolder;
     cursor: pointer;
   }

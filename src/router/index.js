@@ -1,7 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+
 import Index from '@/components/index/Index'
 import Base64Codec from '@/components/base64-codec/Base64Codec'
+import { Fate, Arrange, Draw, FlipACoin } from '@/components/fate'
 
 Vue.use(Router)
 
@@ -16,8 +18,30 @@ const router = new Router({
       name: 'Base64Codec',
       component: Base64Codec,
       meta: {
-        title: 'Base64 在线编解码'
+        title: 'Base64 编解码器'
       }
+    }, {
+      path: '/fate',
+      name: 'Fate',
+      component: Fate,
+      meta: {
+        title: '命运'
+      },
+      children: [
+        {
+          path: 'arrange',
+          name: 'Arrange',
+          component: Arrange
+        }, {
+          path: 'draw',
+          name: 'Draw',
+          component: Draw
+        }, {
+          path: 'flip-a-coin',
+          name: 'FlipACoin',
+          component: FlipACoin
+        }
+      ]
     }
   ]
 })
