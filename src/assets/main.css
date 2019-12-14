@@ -6,4 +6,5 @@
 
 .tool-h1-normal {
   font-size: 30px;
+  user-select: none;
 }
