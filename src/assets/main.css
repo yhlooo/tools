@@ -8,3 +8,13 @@
   font-size: 30px;
   user-select: none;
 }
+.icon-btn {
+  margin: 0 5px;
+  font-size: 30px;
+  color: #606266;
+  cursor: pointer;
+  vertical-align: center;
+}
+.icon-btn:hover {
+  color: #409eff;
+}

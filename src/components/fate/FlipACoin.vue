@@ -268,13 +268,4 @@ export default {
   .tips:hover {
     color: #3373c7;
   }
-  .icon-btn {
-    margin: 0 5px;
-    font-size: 30px;
-    color: #606266;
-    cursor: pointer;
-  }
-  .icon-btn:hover {
-    color: #409eff;
-  }
 </style>
