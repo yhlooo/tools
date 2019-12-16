@@ -43,9 +43,13 @@ export default {
       this.$router.push(`/fate/${newMode.url}`)
     },
     checkUrl (url) {
-      for (let i = 0; i < this.modeOptions.length; i++) {
-        if (`/fate/${this.modeOptions[i].url}` === url) {
-          this.mode = this.modeOptions[i]
+      let urlMatchGroups = url.match('^/fate/([^/]+?)(/.*?)?$')
+      if (urlMatchGroups) {
+        for (let i = 0; i < this.modeOptions.length; i++) {
+          if (urlMatchGroups[1] === this.modeOptions[i].url) {
+            this.mode = this.modeOptions[i]
+            break
+          }
         }
       }
     }

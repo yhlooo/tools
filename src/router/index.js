@@ -33,9 +33,10 @@ const router = new Router({
           name: 'Arrange',
           component: Arrange
         }, {
-          path: 'draw',
+          path: 'draw/:importBase64Text?',
           name: 'Draw',
-          component: Draw
+          component: Draw,
+          props: true
         }, {
           path: 'flip-a-coin',
           name: 'FlipACoin',
