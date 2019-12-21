@@ -338,6 +338,7 @@ export default {
         type: 'warning'
       }).then(() => {
         this.results.splice(0, this.results.length)
+        this.currentResultId = 1
         console.log('清空“抽取结果”')
         this.$message.success('“抽取结果”已清空!')
       }).catch(() => {
