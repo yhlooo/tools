@@ -61,11 +61,13 @@
           @blur="handleAppendTag"
           show-word-limit>
         </el-input>
-        <el-button v-else-if="tagsPoolEditable" class="new-tag-btn" size="small" @click="showNewOptionInput">
+        <el-button v-else-if="tagsPoolEditable" class="new-tag-btn" size="small" @click="showNewTagInput">
           <i class="el-icon-plus el-icon--left"></i>添加标签
         </el-button>
       </div>
     </div>
+
+    <!-- 控制面板 -->
     <div class="control-panel panel">
       <el-button type="primary" @click="handleDraw">开始抽取</el-button>
       <i class="el-icon-s-tools icon-btn" @click="settingsPanelVisible = true"></i>
@@ -257,27 +259,32 @@ export default {
   },
   data () {
     return {
-      tagsPoolTitle: '标签池',
+      // 标签池
+      tagsPoolTitle: '标签池', // 标签池标题
       tagsPool: [
         { label: '一个标签', color: this.getARandColor() },
         { label: '就是', color: this.getARandColor() },
         { label: '一个可以抽的“签”', color: this.getARandColor() }
-      ],
-      results: [],
+      ], // 标签池
       newTagInputVisible: false,
       newTagInputValue: '',
-      settingsPanelVisible: false,
-      sharePanelVisible: false,
-      tagsPoolEditable: true,
-      shareQRCode: null,
-      clipboard: new Clipboard('.copy-btn'),
-      shareURL: '',
 
-      // 抽取行为
+      // 结果面板
+      results: [], // 抽取结果
+      currentResultId: 1, // 当前结果序号
+
+      // 设置面板
+      settingsPanelVisible: false,
       putBack: true, // 是否放回
       drawTimes: 1, // 连抽次数
+      importTags: '', // 批量导入输入框
 
-      importTags: ''// 批量导入输入框
+      // 分享面板
+      sharePanelVisible: false,
+      tagsPoolEditable: true,
+      clipboard: new Clipboard('.copy-btn'),
+      shareURL: '',
+      shareQRCode: null
     }
   },
   mounted () {
@@ -286,7 +293,7 @@ export default {
     }
   },
   methods: {
-    showNewOptionInput () {
+    showNewTagInput () {
       this.newTagInputVisible = true
       this.$nextTick(() => {
         this.$refs.newTagInput.$refs.input.focus()
@@ -361,13 +368,14 @@ export default {
       for (let i = 0; i < this.drawTimes; i++) {
         results.push(this.choice(this.tagsPool, this.putBack))
       }
-      this.results.push({
-        title: `第${this.results.length + 1}次抽取`,
+      this.results.unshift({
+        title: `第${this.currentResultId}次抽取`,
         results: results,
         canPutBack: !this.putBack,
         view: 'tags',
         titleEditable: false
       })
+      this.currentResultId += 1
     },
     handleResultCommand (command) {
       if (command[0] === 'put-back') {
@@ -539,7 +547,7 @@ export default {
     border-color: #3373c7;
     border-radius: 5px;
   }
-  .tags-panel-label, .results-panel-label {
+  .tags-panel-label {
     padding: 0 10px 10px;
     font-size: 20px;
   }
@@ -584,10 +592,13 @@ export default {
 
   /* 结果面板 */
   .results-panel {
-    margin-top: 40px;
     padding: 10px 5px;
     border-radius: 5px;
     box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+  }
+  .results-panel-label {
+    padding: 0 10px;
+    font-size: 20px;
   }
   .result-panel {
     margin: 10px 0;
@@ -622,5 +633,15 @@ export default {
     max-height: 300px;
     overflow: auto;
     line-break: anywhere;
+    word-wrap: break-word;
+    word-break: break-all;
+  }
+</style>
+<style>
+  .result-panel > .el-card__header {
+    padding: 10px;
+  }
+  .result-panel > .el-card__body {
+    padding: 10px 8px;
   }
 </style>
