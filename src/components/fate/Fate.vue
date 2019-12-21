@@ -26,12 +26,16 @@ export default {
   name: 'Fate',
   data () {
     return {
-      mode: { label: '模式选择', value: 'unknown', color: 'inherit' },
+      mode: { label: '抛硬币', url: 'flip-a-coin', color: '#29769f' },
       modeOptions: [
         { label: '抛硬币', url: 'flip-a-coin', color: '#29769f' },
-        { label: '抽签', url: 'draw', color: '#9f4e2c' },
-        { label: '排序', url: 'arrange', color: '#489f40' }
+        { label: '抽签', url: 'draw', color: '#9f4e2c' }
       ]
+    }
+  },
+  watch: {
+    $route (to) {
+      this.checkUrl(to.path)
     }
   },
   mounted () {
@@ -39,11 +43,12 @@ export default {
   },
   methods: {
     switchMode (newMode) {
-      this.mode = newMode
-      this.$router.push(`/fate/${newMode.url}`)
+      if (this.mode !== newMode) {
+        this.$router.push(`/fate/${newMode.url}`)
+      }
     },
     checkUrl (url) {
-      let urlMatchGroups = url.match('^/fate/([^/]+?)(/.*?)?$')
+      let urlMatchGroups = url.match('^/fate/([^/]*?)(/.*?)?$')
       if (urlMatchGroups) {
         for (let i = 0; i < this.modeOptions.length; i++) {
           if (urlMatchGroups[1] === this.modeOptions[i].url) {
