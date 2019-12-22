@@ -10,8 +10,8 @@ export default {
 }
 </script>
 
-<style>
-  @import 'assets/main.css';
+<style lang="less">
+  @import 'assets/main';
 
   body {
     margin: 0;

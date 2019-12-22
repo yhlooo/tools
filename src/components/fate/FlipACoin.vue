@@ -24,8 +24,8 @@
       </div>
     </div>
 
-    <i class="el-icon-s-tools icon-btn" @click="showSettingsPanel = true"></i>
-    <i class="el-icon-info icon-btn" @click="showTipsPanel = true"></i>
+    <i class="el-icon-s-tools keybrl-icon-btn lg" @click="showSettingsPanel = true"></i>
+    <i class="el-icon-info keybrl-icon-btn lg" @click="showTipsPanel = true"></i>
 
     <el-drawer
       title="高级设置"
@@ -39,21 +39,21 @@
         <span class="label">
           硬币大小
           <el-tooltip effect="dark" content="拖动滑块，调整硬币大小至接近真实大小" placement="right">
-            <i class="el-icon-info tips"></i>
+            <i class="el-icon-info keybrl-tips-icon"></i>
           </el-tooltip>
         </span>
         <el-slider class="max-width" v-model="coinSize" :show-tooltip="false"></el-slider>
         <span class="label">
           旋转速度
           <el-tooltip effect="dark" content="拖动滑块，调整硬币旋转速度至满意" placement="right">
-            <i class="el-icon-info tips"></i>
+            <i class="el-icon-info keybrl-tips-icon"></i>
           </el-tooltip>
         </span>
         <el-slider class="max-width" v-model="coinRotatingSpeed" :show-tooltip="false"></el-slider>
         <span class="label">
           硬币类型
           <el-tooltip effect="dark" content="选择一枚自己喜欢的硬币" placement="right">
-            <i class="el-icon-info tips"></i>
+            <i class="el-icon-info keybrl-tips-icon"></i>
           </el-tooltip>
         </span>
         <el-select v-model="coinType" placeholder="硬币类型">
@@ -84,7 +84,7 @@
         </ol>
         <p><b>Tips: 旋转时间与结果无关</b></p>
         <h3>高级设置</h3>
-        <p>点击页面上的 <i class="el-icon-s-tools icon-btn"></i> 图标，可以打开设置面板</p>
+        <p>点击页面上的 <i class="el-icon-s-tools keybrl-icon-btn lg"></i> 图标，可以打开设置面板</p>
         <p>在设置面板打开状态下，硬币会自动进入旋转状态，以作为设置参考</p>
         <p>调节硬币大小，使页面上显示的硬币大小<b>与真实硬币接近</b>；调节旋转速度至<b>使你感觉舒适、放松</b>的值</p>
         <p>也可以选择自己喜欢的硬币款式</p>
@@ -221,7 +221,9 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
+  @import '../../assets/colors';
+
   .max-width {
     max-width: 400px;
   }
@@ -261,11 +263,7 @@ export default {
     outline: none;
     overflow: auto;
   }
-  .tips {
-    color: #409eff;
-    cursor: pointer;
-  }
-  .tips:hover {
-    color: #3373c7;
+  .keybrl-icon-btn {
+    margin: 0 5px;
   }
 </style>

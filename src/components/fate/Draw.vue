@@ -5,35 +5,30 @@
         {{ tagsPoolTitle }}
         <i
           v-show="tagsPoolEditable"
-          class="el-icon-unlock icon-btn inherit-font-size"
+          class="el-icon-unlock keybrl-icon-btn color-warning"
           title="锁定标签编辑"
-          style="color: #e6a23c"
           @click="tagsPoolEditable = false">
         </i>
         <i
           v-show="!tagsPoolEditable"
-          class="el-icon-lock icon-btn inherit-font-size"
+          class="el-icon-lock keybrl-icon-btn color-success"
           title="解除编辑锁定"
-          style="color: #67c23a"
           @click="tagsPoolEditable = true">
         </i>
         <i
-          class="el-icon-refresh icon-btn inherit-font-size"
+          class="el-icon-refresh keybrl-icon-btn color-primary"
           title="摇晃均匀"
-          style="color: #409eff"
           @click="handleRearrangeTagsPool">
         </i>
         <i
-          class="el-icon-share icon-btn inherit-font-size"
+          class="el-icon-share keybrl-icon-btn color-info"
           title="分享"
-          style="color: #909399"
           @click="exportConfig">
         </i>
         <i
           v-show="tagsPoolEditable"
-          class="el-icon-delete-solid icon-btn inherit-font-size"
+          class="el-icon-delete-solid keybrl-icon-btn color-danger"
           title="清空"
-          style="color: #f56c6c"
           @click="handleClearTagsPool">
         </i>
       </div>
@@ -70,9 +65,9 @@
     <!-- 控制面板 -->
     <div class="control-panel panel">
       <el-button type="primary" @click="handleDraw">开始抽取</el-button>
-      <i class="el-icon-s-tools icon-btn" @click="settingsPanelVisible = true"></i>
+      <i class="el-icon-s-tools keybrl-icon-btn lg" @click="settingsPanelVisible = true"></i>
       <span>
-        <i class="el-icon-info el-icon--left" style="color: #909399"></i>
+        <i class="el-icon-info el-icon--left color-info"></i>
         {{ putBack ? '放回' : '不放回' }} {{ drawTimes === 1 ? '单次抽取' : `连抽${drawTimes}次` }}
       </span>
     </div>
@@ -81,7 +76,7 @@
     <div v-show="results.length > 0" class="results-panel panel">
       <div class="results-panel-label">
         抽取结果
-        <i class="el-icon-delete-solid icon-btn inherit-font-size" style="color: #f56c6c" @click="handleClearResults"></i>
+        <i class="el-icon-delete-solid keybrl-icon-btn color-danger" @click="handleClearResults"></i>
       </div>
       <el-card
         v-for="(result, i) in results"
@@ -92,7 +87,7 @@
           <span v-if="!result.titleEditable">
             {{ result.title }}
             <i
-              class="el-icon-edit icon-btn inherit-font-size"
+              class="el-icon-edit keybrl-icon-btn"
               @click="showResultTitleInput(i, result)">
             </i>
           </span>
@@ -110,26 +105,26 @@
           <div style="float: right; padding: 3px 0">
             <el-dropdown @command="handleResultCommand" trigger="click">
               <span>
-                <fa-icon icon="bars" class="icon-btn inherit-font-size"></fa-icon>
+                <fa-icon icon="bars" class="keybrl-icon-btn"></fa-icon>
               </span>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item
                   v-if="result.canPutBack"
                   :command="['put-back', result]">
-                  <fa-icon icon="undo"></fa-icon> 将结果全部放回标签池
+                  <fa-icon icon="undo" class="color-info"></fa-icon> 将结果全部放回标签池
                 </el-dropdown-item>
                 <el-dropdown-item
                   v-if="result.view === 'tags'"
                   :command="['list-view', result]">
-                  <fa-icon icon="list"></fa-icon> 更改为列表视图
+                  <fa-icon icon="list" class="color-info"></fa-icon> 更改为列表视图
                 </el-dropdown-item>
                 <el-dropdown-item
                   v-else
                   :command="['tags-view', result]">
-                  <fa-icon icon="tags"></fa-icon> 更改为标签视图
+                  <fa-icon icon="tags" class="color-info"></fa-icon> 更改为标签视图
                 </el-dropdown-item>
                 <el-dropdown-item :command="['delete', i]">
-                  <fa-icon icon="trash" style="color: #f56c6c"></fa-icon> 删除该结果
+                  <fa-icon icon="trash" class="color-danger"></fa-icon> 删除该结果
                 </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
@@ -167,21 +162,25 @@
         <div class="label">
           是否放回
           <el-tooltip effect="dark" content="每次抽取，取出的标签是否放回标签池" placement="right">
-            <i class="el-icon-info tips"></i>
+            <i class="el-icon-info keybrl-tips-icon"></i>
           </el-tooltip>
         </div>
         <div class="setting-item">
           <el-switch
             v-model="putBack"
-            active-color="#13ce66"
-            inactive-color="#ff4949">
+            active-color="#67c23a"
+            inactive-color="#f56c6c">
           </el-switch>
-          <span style="display: inline-block; color: #909399; width: 55px; text-align: right">{{ putBack ? '放回' : '不放回' }}</span>
+          <span
+            class="color-text-secondary"
+            style="display: inline-block; width: 55px; text-align: right; vertical-align: middle">
+            {{ putBack ? '放回' : '不放回' }}
+          </span>
         </div>
         <div class="label">
           连抽次数
           <el-tooltip effect="dark" content="按一次“开始抽取”按钮后连续抽取的次数" placement="right">
-            <i class="el-icon-info tips"></i>
+            <i class="el-icon-info keybrl-tips-icon"></i>
           </el-tooltip>
         </div>
         <div class="setting-item">
@@ -190,7 +189,7 @@
         <div class="label">
           标签池标题
           <el-tooltip effect="dark" content="就是主页上虚线框内左上角显示的东西" placement="right">
-            <i class="el-icon-info tips"></i>
+            <i class="el-icon-info keybrl-tips-icon"></i>
           </el-tooltip>
         </div>
         <div class="setting-item">
@@ -199,7 +198,7 @@
         <div class="label">
           批量导入标签
           <el-tooltip effect="dark" content="一行一个标签" placement="right">
-            <i class="el-icon-info tips"></i>
+            <i class="el-icon-info keybrl-tips-icon"></i>
           </el-tooltip>
           <el-button type="success" icon="el-icon-check" size="mini" @click="handleImportTags"></el-button>
         </div>
@@ -231,7 +230,7 @@
           分享链接
           <i
             title="复制"
-            class="el-icon-copy-document icon-btn inherit-font-size copy-btn"
+            class="el-icon-copy-document keybrl-icon-btn copy-btn"
             :data-clipboard-text="shareURL"
             @click="handleCopySuccess('分享链接')">
           </i>
@@ -469,7 +468,7 @@ export default {
             height: 256,
             colorDark: '#000000',
             colorLight: '#ffffff',
-            correctLevel: QRCode.CorrectLevel.H
+            correctLevel: QRCode.CorrectLevel.L
           })
         } catch (e) {
           console.log('导出内容过多，无法生成二维码')
@@ -528,10 +527,8 @@ export default {
 }
 </script>
 
-<style scoped>
-  .inherit-font-size {
-    font-size: inherit;
-  }
+<style lang="less" scoped>
+  @import '../../assets/colors';
 
   .panel {
     margin: 10px 0;
@@ -540,12 +537,9 @@ export default {
   /* 标签池 */
   .tags-panel {
     padding: 10px 5px;
-    border-top-style: dashed;
-    border-right-style: dashed;
-    border-bottom-style: dashed;
-    border-left-style: dashed;
+    border-style: dashed;
     border-width: 1px;
-    border-color: #3373c7;
+    border-color: @color-primary;
     border-radius: 5px;
   }
   .tags-panel-label {
@@ -572,10 +566,10 @@ export default {
 
   /* 控制面板 */
   .control-panel {
-  }
-  .control-panel .icon-btn {
-    line-height: 40px;
-    vertical-align: bottom;
+    .icon-btn {
+      line-height: 40px;
+      vertical-align: bottom;
+    }
   }
 
   /* 设置面板 */
@@ -583,12 +577,12 @@ export default {
     height: calc(90vh - 74px);
     padding: 5px 20px;
     overflow: auto;
-  }
-  .settings-panel .label {
-    margin: 0 0 8px;
-  }
-  .settings-panel .setting-item {
-    margin: 0 0 20px;
+    .label {
+      margin: 0 0 8px;
+    }
+    .setting-item {
+      margin: 0 0 20px;
+    }
   }
 
   /* 结果面板 */
@@ -622,20 +616,20 @@ export default {
     padding: 20px;
     line-break: anywhere;
     overflow: auto;
-  }
-  .share-panel p {
-    margin: 0 0 20px;
-  }
-  .share-panel h3 {
-    margin: 0 0 8px;
-  }
-  .share-panel .share-url {
-    flex-grow: 1;
-    max-height: 300px;
-    overflow: auto;
-    line-break: anywhere;
-    word-wrap: break-word;
-    word-break: break-all;
+    p {
+      margin: 0 0 20px;
+    }
+    h3 {
+      margin: 0 0 8px;
+    }
+    .share-url {
+      flex-grow: 1;
+      max-height: 300px;
+      overflow: auto;
+      line-break: anywhere;
+      word-wrap: break-word;
+      word-break: break-all;
+    }
   }
 </style>
 <style>
