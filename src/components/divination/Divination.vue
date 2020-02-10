@@ -1,34 +1,34 @@
 <template>
   <div id="divination" class="tool-main-normal">
-    <h1 class="tool-h1-normal" @click="changeFate">知命</h1>
-    <div class="con" @click="changeFate">
-      <el-col>
-        <el-card shadow="never" >
-          <canvas id="cv" height="168px">
-            不支持canvas的浏览器
-          </canvas>
-          <div id="ans">
-            <el-row>
-              <el-col :span="2" :offset="18"><div class="vertical right">{{ h.brief }}</div></el-col>
-              <el-col :span="2"><div class="vertical right">{{ h.fortune }}</div></el-col>
-              <el-col :span="2"><div class="vertical right">{{ h.tag }}</div></el-col>
-            </el-row>
-            <el-row>
-              <el-col :span="2"> <div class="vertical left">{{ h.picture }} {{ h.name }}</div></el-col>
-            </el-row>
-          </div>
+    <h1 class="tool-h1-normal">知命</h1>
+    <div class="main-panel">
+      <div class="user-cv-container">
+        <canvas v-show="!resultVisible" id="user-cv" class="user-cv">
+          不支持canvas的浏览器
+        </canvas>
+      </div>
+      <div v-show="resultVisible">
+        <el-row>
+          <el-col :span="2" :offset="18"><div class="vertical right">{{ result.brief }}</div></el-col>
+          <el-col :span="2"><div class="vertical right">{{ result.fortune }}</div></el-col>
+          <el-col :span="2"><div class="vertical right">{{ result.tag }}</div></el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="2"> <div class="vertical left">{{ result.picture }} {{ result.name }}</div></el-col>
+        </el-row>
+      </div>
+    </div>
 
-        </el-card>
-      </el-col>
+    <div class="btn-group">
+      <el-button plain @click="handleClearBtnClick">{{clearBtnLabel}}</el-button>
+      <el-button plain @click="divine" v-show="!resultVisible">发书占之</el-button>
+      <i class="el-icon-info keybrl-icon-btn lg" @click="tipsPanelVisible = true"></i>
     </div>
-    <div class="but">
-      <el-button ref="buttonClear" plain @click="clear" id="clear" :disabled="isDiv">清空</el-button>
-      <el-button ref="buttonAns" plain  @click="getBase64" :disabled="isDiv">发书占之</el-button>
-      <i class="el-icon-info keybrl-icon-btn lg" @click="showTipsPanel = true"></i>
-    </div>
+
+    <!-- 帮助信息面板 -->
     <el-drawer
       title="使用说明"
-      :visible.sync="showTipsPanel"
+      :visible.sync="tipsPanelVisible"
       direction="btt"
       size="60%">
       <span slot="title" role="heading" tabindex="0" title="使用说明" style="outline: none">使用说明</span>
@@ -44,6 +44,7 @@
         </ol>
       </div>
     </el-drawer>
+
   </div>
 </template>
 
@@ -55,24 +56,30 @@ export default {
   name: 'Divination',
   data () {
     return {
-      h: results[Math.floor(Math.random() * 64)],
-      showTipsPanel: false,
-      isDiv: false
+      result: {
+        name: null,
+        brief: null,
+        fortune: null,
+        description: null,
+        picture: null,
+        tag: null
+      },
+      tipsPanelVisible: false,
+      resultVisible: false,
+      clearBtnLabel: '清空'
     }
   },
   mounted () {
-    this.initCanvas()
+    this.initUserCanvas()
   },
   methods: {
-    changeFate () {
-      this.h = results[Math.floor(Math.random() * 64)]
-      console.log('i try')
-    },
-    initCanvas () {
-      let theCanvas = document.getElementById('cv')
-      theCanvas.width = document.body.clientWidth
-      let cv = document.getElementById('cv')
-      let ctx = cv.getContext('2d')
+
+    initUserCanvas () {
+      this.setUserCvSize()
+      const cv = document.getElementById('user-cv')
+      const ctx = cv.getContext('2d')
+
+      // 绑定用户鼠标按下事件，使用户能够绘画
       cv.onmousedown = function (ev) {
         ctx.moveTo(ev.clientX - cv.offsetLeft, ev.clientY - cv.offsetTop)
         document.onmousemove = function (ev) {
@@ -85,26 +92,46 @@ export default {
         }
       }
     },
-    getBase64 () {
-      let canvas = document.getElementById('cv')
-      let base64 = canvas.toDataURL('image/png')
-      let num = sha256(base64)
-      let ans
-      for (let i = 0; i < 64; i++) {
-        ans = num.charAt(i).charCodeAt()
-        if (ans < 64) {
-          break
-        }
-      }
-      document.getElementById('cv').style.display = 'none'
-      this.h = results[ans % 64]
-      document.getElementById('ans').style.display = 'block'
-      this.isDiv = true
+
+    /**
+     * 设置画布大小
+     */
+    setUserCvSize () {
+      let cv = document.getElementById('user-cv')
+      cv.width = cv.clientWidth
+      cv.height = cv.clientHeight
     },
-    clear () {
-      let c = document.getElementById('cv')
-      c.height = c.height
+
+    divine () {
+      const cv = document.getElementById('user-cv')
+      const cvDataBase64 = cv.toDataURL('image/png')
+      const cvDataSha256 = sha256(cvDataBase64)
+
+      let resIndex = 0
+      for (let i = 0; i < 6; i++) {
+        resIndex *= 2
+        resIndex += parseInt(cvDataSha256.substr(i * 10, 10), 16) > 5549755813887.5 ? 1 : 0
+      }
+      resIndex += parseInt(cvDataSha256.substr(60, 4), 16)
+
+      this.result = results[resIndex % 64]
+      this.clearBtnLabel = '重置'
+      this.resultVisible = true
+
+      console.log(`抽取到第 ${resIndex % 64} 个结果`)
+    },
+
+    /**
+     * 处理清空按钮点击事件
+     *
+     * 清空画布、结果
+     */
+    handleClearBtnClick () {
+      const cv = document.getElementById('user-cv')
+      cv.height += 0
+      this.resultVisible = false
     }
+
   }
 }
 </script>
@@ -113,14 +140,19 @@ export default {
   .vertical {
     width: 0;
   }
-  #ans {
-    display: none;
+  .btn-group {
+    padding-top: 24px;
   }
-  .con {
-    margin-bottom: 150px;
+  .main-panel {
+    padding: 10px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #f0f2f8;
+    border-radius: 5px;
   }
-  .but{
-    padding-top: 120px;
+  .user-cv {
+    width: 100%;
+    height: 168px;
   }
   /*.right {*/
   /*  display: block;*/
