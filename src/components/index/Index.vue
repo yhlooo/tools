@@ -21,6 +21,10 @@ export default {
         name: 'Fate',
         title: '命运',
         url: '/fate'
+      }, {
+        name: 'Divination',
+        title: '知命',
+        url: '/divination'
       }]
     }
   },

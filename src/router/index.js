@@ -4,6 +4,7 @@ import Router from 'vue-router'
 import Index from '@/components/index/Index'
 import Base64Codec from '@/components/base64-codec/Base64Codec'
 import { Fate, Draw, FlipACoin } from '@/components/fate'
+import Divination from '../components/divination/Divination'
 
 Vue.use(Router)
 
@@ -40,6 +41,13 @@ const router = new Router({
           component: FlipACoin
         }
       ]
+    }, {
+      path: '/divination',
+      name: 'Divination',
+      component: Divination,
+      meta: {
+        title: '知命'
+      }
     }
   ]
 })
