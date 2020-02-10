@@ -4,10 +4,17 @@
     <div class="con" @click="changeFate">
       <el-col>
         <el-card shadow="never">
-          {{h.picture}}
-          {{h.name}}
-          {{h.fortune}}
-          {{h.description}}
+          <div>
+            <el-row>
+              <el-col :span="2" :offset="18"><div class="vertical right">{{ h.brief }}</div></el-col>
+              <el-col :span="2"><div class="vertical right">{{ h.fortune }}</div></el-col>
+              <el-col :span="2"><div class="vertical right">{{ h.tag }}</div></el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="2"> <div class="vertical left">{{ h.picture }} {{ h.name }}</div></el-col>
+            </el-row>
+          </div>
+
         </el-card>
       </el-col>
     </div>
@@ -34,5 +41,11 @@ export default {
 </script>
 
 <style scoped>
-
+  .vertical {
+    width: 0;
+  }
+  /*.right {*/
+  /*  display: block;*/
+  /*  float: right;*/
+  /*}*/
 </style>
