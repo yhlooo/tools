@@ -44,12 +44,13 @@
         </ol>
       </div>
     </el-drawer>
-<!--    <button @click="getBase64">hhhh</button>-->
   </div>
 </template>
 
 <script>
+import { sha256 } from 'js-sha256'
 import { res } from './result'
+
 export default {
   name: 'Divination',
   data () {
@@ -68,10 +69,10 @@ export default {
       console.log('i try')
     },
     initCanvas () {
-      var theCanvas = document.getElementById('cv')
+      let theCanvas = document.getElementById('cv')
       theCanvas.width = document.body.clientWidth
-      var cv = document.getElementById('cv')
-      var ctx = cv.getContext('2d')
+      let cv = document.getElementById('cv')
+      let ctx = cv.getContext('2d')
       cv.onmousedown = function (ev) {
         ctx.moveTo(ev.clientX - cv.offsetLeft, ev.clientY - cv.offsetTop)
         document.onmousemove = function (ev) {
@@ -85,11 +86,10 @@ export default {
       }
     },
     getBase64 () {
-      const sha256 = require('js-sha256').sha256
-      var canvas = document.getElementById('cv')
-      var base64 = canvas.toDataURL('image/png')
-      var num = sha256(base64)
-      var ans
+      let canvas = document.getElementById('cv')
+      let base64 = canvas.toDataURL('image/png')
+      let num = sha256(base64)
+      let ans
       for (let i = 0; i < 64; i++) {
         ans = num.charAt(i).charCodeAt()
         if (ans < 64) {
@@ -102,7 +102,7 @@ export default {
       this.isDiv = true
     },
     clear () {
-      var c = document.getElementById('cv')
+      let c = document.getElementById('cv')
       c.height = c.height
     }
   }
