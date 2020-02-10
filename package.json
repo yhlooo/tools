@@ -32,6 +32,7 @@
     "clipboard": "^2.0.4",
     "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.28.0",
+    "cz-conventional-changelog": "^3.1.0",
     "element-ui": "^2.13.0",
     "eslint": "^4.15.0",
     "eslint-config-standard": "^10.2.1",
@@ -47,6 +48,7 @@
     "friendly-errors-webpack-plugin": "^1.6.1",
     "html-webpack-plugin": "^2.30.1",
     "js-base64": "^2.5.1",
+    "js-sha256": "^0.9.0",
     "less": "^3.10.3",
     "less-loader": "^5.0.0",
     "node-notifier": "^5.1.2",
@@ -78,5 +80,10 @@
     "> 1%",
     "last 2 versions",
     "not ie <= 8"
-  ]
+  ],
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
 }
