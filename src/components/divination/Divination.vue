@@ -49,13 +49,13 @@
 
 <script>
 import { sha256 } from 'js-sha256'
-import { res } from './result'
+import { results } from './results'
 
 export default {
   name: 'Divination',
   data () {
     return {
-      h: res[Math.ceil(Math.random() * 64)],
+      h: results[Math.floor(Math.random() * 64)],
       showTipsPanel: false,
       isDiv: false
     }
@@ -65,7 +65,7 @@ export default {
   },
   methods: {
     changeFate () {
-      this.h = res[Math.ceil(Math.random() * 64)]
+      this.h = results[Math.floor(Math.random() * 64)]
       console.log('i try')
     },
     initCanvas () {
@@ -97,7 +97,7 @@ export default {
         }
       }
       document.getElementById('cv').style.display = 'none'
-      this.h = res[ans % 63]
+      this.h = results[ans % 64]
       document.getElementById('ans').style.display = 'block'
       this.isDiv = true
     },
