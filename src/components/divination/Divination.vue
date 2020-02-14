@@ -7,15 +7,24 @@
           不支持canvas的浏览器
         </canvas>
       </div>
-      <div v-show="resultVisible">
-        <el-row>
-          <el-col :span="2" :offset="18"><div class="vertical right">{{ result.brief }}</div></el-col>
-          <el-col :span="2"><div class="vertical right">{{ result.fortune }}</div></el-col>
-          <el-col :span="2"><div class="vertical right">{{ result.tag }}</div></el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="2"> <div class="vertical left">{{ result.picture }} {{ result.name }}</div></el-col>
-        </el-row>
+      <div v-show="resultVisible & !detailVisible" @click="detailVisible = true">
+          <div class="r-content">
+            <div class="vertical right">{{ result.brief }}</div>
+            <div class="vertical right">{{ result.fortune }}</div>
+            <div class="vertical right">{{ result.tag }}</div>
+          </div>
+          <div class="vertical left">{{ result.picture }} {{ result.name }}</div>
+<!--        <el-row>-->
+<!--          <el-col :span="2" :offset="18"><div class="vertical right">{{ result.brief }}</div></el-col>-->
+<!--          <el-col :span="2"><div class="vertical right">{{ result.fortune }}</div></el-col>-->
+<!--          <el-col :span="2"><div class="vertical right">{{ result.tag }}</div></el-col>-->
+<!--        </el-row>-->
+<!--        <el-row>-->
+<!--          <el-col :span="2"> <div class="vertical left">{{ result.picture }} {{ result.name }}</div></el-col>-->
+<!--        </el-row>-->
+      </div>
+      <div v-show="detailVisible" @click="detailVisible = false">
+        {{result.description}}
       </div>
     </div>
 
@@ -38,8 +47,9 @@
         <ol>
           <li>写下或简要画出你的问题</li>
           <li>点击"发书占之"</li>
-          <li>如果你不喜欢这个结果可以点击卡片更换直到出现你想要的结果</li>
+          <li>如果你不喜欢这个结果可以重新绘图直到出现你想要的结果</li>
           <li>毕竟命运掌握在自己手中</li>
+          <li>单击结果卡可以查看此卦详情</li>
           <li>你可以开始了</li>
         </ol>
       </div>
@@ -66,6 +76,7 @@ export default {
       },
       tipsPanelVisible: false,
       resultVisible: false,
+      detailVisible: false,
       clearBtnLabel: '清空'
     }
   },
@@ -130,21 +141,35 @@ export default {
       const cv = document.getElementById('user-cv')
       cv.height += 0
       this.resultVisible = false
+      this.detailVisible = false
     }
-
   }
 }
 </script>
 
 <style scoped>
+  .r-content {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: flex-start;
+  }
+  .right {
+    margin: 0 3px 0 2px;
+  }
+  .left {
+    padding-top: 19px;
+    align-items: flex-end;
+  }
   .vertical {
-    width: 0;
+    /*width: 0;*/
+    writing-mode:tb-rl;
+    letter-spacing: 4px;
   }
   .btn-group {
     padding-top: 24px;
   }
   .main-panel {
-    padding: 10px;
+    padding: 12px;
     border-width: 1px;
     border-style: solid;
     border-color: #f0f2f8;
@@ -154,8 +179,4 @@ export default {
     width: 100%;
     height: 168px;
   }
-  /*.right {*/
-  /*  display: block;*/
-  /*  float: right;*/
-  /*}*/
 </style>
