@@ -143,10 +143,6 @@ export default {
           document.ontouchend = null
         }
       }
-
-      window.onresize = () => {
-        console.log('2')
-      }
     },
 
     /**
@@ -204,8 +200,8 @@ export default {
      * 清空画布、结果
      */
     handleClearBtnClick () {
-      this.$refs.userCv.height += 0
       this.isDivined = false
+      this.$nextTick(this.initUserCanvas)
     },
 
     /**
@@ -225,7 +221,7 @@ export default {
           that.$message.warning('由于画布大小改变，内容将会清空')
         }
         console.log('[WARNING] 由于画布大小改变，内容将会清空')
-        that.setUserCvSize()
+        that.initUserCanvas()
       }, 500)
     }
 
