@@ -1,6 +1,6 @@
 <template>
-  <div id="divination" class="tool-main-normal">
-    <h1 class="tool-h1-normal">知命</h1>
+  <div id="divination" class="tool-main-normal divination-main">
+    <h1 class="tool-h1-normal divination-title">知命</h1>
     <div class="main-panel">
       <div class="user-cv-container" v-show="!resultVisible">
         <canvas ref="userCv" class="user-cv">
@@ -20,8 +20,8 @@
       </div>
     </div>
 
-    <div class="btn-group">
-      <el-button plain @click="handleClearBtnClick">{{clearBtnLabel}}</el-button>
+    <div class="divination-footer btn-group">
+      <el-button plain @click="handleClearBtnClick">{{ resultVisible ? '重置' : '清空' }}</el-button>
       <el-button plain @click="divine" v-show="!resultVisible">发书占之</el-button>
       <i class="el-icon-info keybrl-icon-btn lg" @click="tipsPanelVisible = true"></i>
     </div>
@@ -69,7 +69,6 @@ export default {
       tipsPanelVisible: false,
       resultVisible: false,
       detailVisible: false,
-      clearBtnLabel: '清空',
 
       // 窗口大小改变事件处理器的计时器（用于函数节流）
       windowResizeHandlerTimer: null
@@ -86,8 +85,11 @@ export default {
       const cv = this.$refs.userCv
       const ctx = cv.getContext('2d')
 
+      ctx.lineWidth = 3
+
       // 绑定用户鼠标按下事件，使用户能够绘画
       cv.onmousedown = function (ev) {
+        console.log('[INFO] 正在用鼠标作画')
         ctx.moveTo(ev.clientX - cv.offsetLeft, ev.clientY - cv.offsetTop)
         document.onmousemove = function (ev) {
           ctx.lineTo(ev.clientX - cv.offsetLeft, ev.clientY - cv.offsetTop)
@@ -99,7 +101,9 @@ export default {
         }
       }
 
+      // 绑定用户触摸事件，使用户能够使用触摸屏绘画
       cv.ontouchstart = function (ev) {
+        console.log('[INFO] 正在用触摸屏作画')
         ctx.moveTo(ev.touches[0].clientX - cv.offsetLeft, ev.touches[0].clientY - cv.offsetTop)
         document.ontouchmove = function (ev) {
           ctx.lineTo(ev.touches[0].clientX - cv.offsetLeft, ev.touches[0].clientY - cv.offsetTop)
@@ -118,6 +122,8 @@ export default {
 
     /**
      * 设置画布大小
+     *
+     * 将画布大小设置为其显示大小
      */
     setUserCvSize () {
       const cv = this.$refs.userCv
@@ -125,6 +131,14 @@ export default {
       cv.height = cv.clientHeight
     },
 
+    /**
+     * 占卜
+     *
+     * 1. 从画布导出 Base64 编码的数据
+     * 2. 计算其 SHA256
+     * 3. 根据 SHA256 的结果选择一个卦
+     * 4. 展示之
+     */
     divine () {
       const cvDataBase64 = this.$refs.userCv.toDataURL('image/png')
       const cvDataSha256 = sha256(cvDataBase64)
@@ -137,10 +151,9 @@ export default {
       resIndex += parseInt(cvDataSha256.substr(60, 4), 16)
 
       this.result = results[resIndex % 64]
-      this.clearBtnLabel = '重置'
       this.resultVisible = true
 
-      console.log(`抽取到第 ${resIndex % 64} 个结果`)
+      console.log(`[INFO] 抽取到第 ${resIndex % 64} 个结果`)
     },
 
     /**
@@ -176,7 +189,33 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
+  .divination-main {
+    display: flex;
+    height: 100vh;
+    flex-direction: column;
+
+    .main-panel {
+      flex-grow: 1;
+      max-height: 650px;
+      padding: 10px;
+      border-width: 1px;
+      border-style: solid;
+      border-color: #d3d5db;
+      border-radius: 5px;
+      overflow: hidden;
+
+      .user-cv-container, .user-cv {
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    .divination-footer {
+      margin: 24px 0;
+    }
+  }
+
   .r-content {
     display: flex;
     flex-direction: row-reverse;
@@ -194,18 +233,7 @@ export default {
     writing-mode:tb-rl;
     letter-spacing: 4px;
   }
-  .btn-group {
-    padding-top: 24px;
-  }
   .main-panel {
-    padding: 12px;
-    border-width: 1px;
-    border-style: solid;
-    border-color: #f0f2f8;
-    border-radius: 5px;
-  }
-  .user-cv {
-    width: 100%;
-    height: 168px;
+
   }
 </style>
