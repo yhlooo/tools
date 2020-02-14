@@ -102,6 +102,18 @@ export default {
           document.onmouseup = null
         }
       }
+
+      cv.ontouchstart = function (ev) {
+        ctx.moveTo(ev.touches[0].clientX - cv.offsetLeft, ev.touches[0].clientY - cv.offsetTop)
+        document.ontouchmove = function (ev) {
+          ctx.lineTo(ev.touches[0].clientX - cv.offsetLeft, ev.touches[0].clientY - cv.offsetTop)
+          ctx.stroke()
+        }
+        document.ontouchend = function () {
+          document.ontouchmove = null
+          document.ontouchend = null
+        }
+      }
     },
 
     /**
