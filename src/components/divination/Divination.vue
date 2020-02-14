@@ -2,28 +2,20 @@
   <div id="divination" class="tool-main-normal">
     <h1 class="tool-h1-normal">知命</h1>
     <div class="main-panel">
-      <div class="user-cv-container">
-        <canvas v-show="!resultVisible" id="user-cv" class="user-cv">
+      <div class="user-cv-container" v-show="!resultVisible">
+        <canvas ref="userCv" class="user-cv">
           不支持canvas的浏览器
         </canvas>
       </div>
-      <div v-show="resultVisible & !detailVisible" @click="detailVisible = true">
+      <div class="result-container" v-show="resultVisible & !detailVisible" @click="detailVisible = true">
           <div class="r-content">
             <div class="vertical right">{{ result.brief }}</div>
             <div class="vertical right">{{ result.fortune }}</div>
             <div class="vertical right">{{ result.tag }}</div>
           </div>
           <div class="vertical left">{{ result.picture }} {{ result.name }}</div>
-<!--        <el-row>-->
-<!--          <el-col :span="2" :offset="18"><div class="vertical right">{{ result.brief }}</div></el-col>-->
-<!--          <el-col :span="2"><div class="vertical right">{{ result.fortune }}</div></el-col>-->
-<!--          <el-col :span="2"><div class="vertical right">{{ result.tag }}</div></el-col>-->
-<!--        </el-row>-->
-<!--        <el-row>-->
-<!--          <el-col :span="2"> <div class="vertical left">{{ result.picture }} {{ result.name }}</div></el-col>-->
-<!--        </el-row>-->
       </div>
-      <div v-show="detailVisible" @click="detailVisible = false">
+      <div class="result-detail-container" v-show="detailVisible" @click="detailVisible = false">
         {{result.description}}
       </div>
     </div>
@@ -77,17 +69,21 @@ export default {
       tipsPanelVisible: false,
       resultVisible: false,
       detailVisible: false,
-      clearBtnLabel: '清空'
+      clearBtnLabel: '清空',
+
+      // 窗口大小改变事件处理器的计时器（用于函数节流）
+      windowResizeHandlerTimer: null
     }
   },
   mounted () {
     this.initUserCanvas()
+    window.onresize = this.throttledHandleWindowResize
   },
   methods: {
 
     initUserCanvas () {
       this.setUserCvSize()
-      const cv = document.getElementById('user-cv')
+      const cv = this.$refs.userCv
       const ctx = cv.getContext('2d')
 
       // 绑定用户鼠标按下事件，使用户能够绘画
@@ -114,20 +110,23 @@ export default {
           document.ontouchend = null
         }
       }
+
+      window.onresize = () => {
+        console.log('2')
+      }
     },
 
     /**
      * 设置画布大小
      */
     setUserCvSize () {
-      let cv = document.getElementById('user-cv')
+      const cv = this.$refs.userCv
       cv.width = cv.clientWidth
       cv.height = cv.clientHeight
     },
 
     divine () {
-      const cv = document.getElementById('user-cv')
-      const cvDataBase64 = cv.toDataURL('image/png')
+      const cvDataBase64 = this.$refs.userCv.toDataURL('image/png')
       const cvDataSha256 = sha256(cvDataBase64)
 
       let resIndex = 0
@@ -150,10 +149,28 @@ export default {
      * 清空画布、结果
      */
     handleClearBtnClick () {
-      const cv = document.getElementById('user-cv')
-      cv.height += 0
+      this.$refs.userCv.height += 0
       this.resultVisible = false
       this.detailVisible = false
+    },
+
+    /**
+     * （节流地）处理窗口大小改变
+     *
+     * 同步修改画布大小
+     */
+    throttledHandleWindowResize () {
+      const that = this
+
+      // 清除定时器
+      clearTimeout(this.windowResizeHandlerTimer)
+
+      // 设置定时器
+      this.windowResizeHandlerTimer = setTimeout(() => {
+        that.$message.warning('由于画布大小改变，内容将会清空')
+        console.log('[WARNING] 由于画布大小改变，内容将会清空')
+        that.setUserCvSize()
+      }, 500)
     }
   }
 }
