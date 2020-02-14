@@ -84,17 +84,16 @@ export default {
   name: 'Divination',
   data () {
     return {
-      // result: {
-      //   name: null,
-      //   brief: null,
-      //   fortune: null,
-      //   description: null,
-      //   picture: null,
-      //   tag: null
-      // },
-      result: results[1],
+      result: {
+        name: null,
+        brief: null,
+        fortune: null,
+        description: null,
+        picture: null,
+        tag: null
+      },
       tipsPanelVisible: false,
-      isDivined: true,
+      isDivined: false,
       isResultTextVertical: true,
 
       // 窗口大小改变事件处理器的计时器（用于函数节流）
@@ -318,6 +317,13 @@ export default {
 
     .divination-footer {
       margin: 24px 0;
+    }
+
+    .tips-panel {
+      height: calc(60vh - 74px);
+      padding: 5px 20px;
+      outline: none;
+      overflow: auto;
     }
   }
 
