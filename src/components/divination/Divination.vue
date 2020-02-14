@@ -1,28 +1,54 @@
 <template>
   <div id="divination" class="tool-main-normal divination-main">
+
+    <!-- 标题 -->
     <h1 class="tool-h1-normal divination-title">知命</h1>
-    <div class="main-panel">
-      <div class="user-cv-container" v-show="!resultVisible">
+
+    <!-- 主面板 -->
+    <div
+      class="main-panel"
+      :class="{
+        'light-yellow-bg': isDivined && isResultTextVertical,
+        'grow': !isDivined || isResultTextVertical
+      }"
+    >
+
+      <!-- 画布 -->
+      <div class="user-cv-container" v-show="!isDivined">
         <canvas ref="userCv" class="user-cv">
           不支持canvas的浏览器
         </canvas>
       </div>
-      <div class="result-container" v-show="resultVisible & !detailVisible" @click="detailVisible = true">
-          <div class="r-content">
-            <div class="vertical right">{{ result.brief }}</div>
-            <div class="vertical right">{{ result.fortune }}</div>
-            <div class="vertical right">{{ result.tag }}</div>
-          </div>
-          <div class="vertical left">{{ result.picture }} {{ result.name }}</div>
+
+      <!-- 结果 -->
+      <div
+        class="result-container"
+        :class="isResultTextVertical ? 'vertical' : 'horizontal'"
+        v-show="isDivined"
+        @click="isResultTextVertical = !isResultTextVertical"
+      >
+        <div v-show="isResultTextVertical">
+          {{ result.brief }}<br>
+          <span class="red">{{ result.fortune }}</span><br>
+          {{ result.tag }}
+        </div>
+        <div v-show="!isResultTextVertical">
+          {{ result.brief }}（{{ result.fortune }}）<br>
+          {{ result.tag }}
+        </div>
+        <div class="result-detail">
+          {{ isResultTextVertical ? removePunctuation(result.description) : result.description }}
+        </div>
+        <div class="result-space"></div>
+        <div class="result-end"><span class="red">{{ result.picture }}</span> {{ result.name }}</div>
       </div>
-      <div class="result-detail-container" v-show="detailVisible" @click="detailVisible = false">
-        {{result.description}}
-      </div>
+
     </div>
 
+    <!-- 底部按钮 -->
     <div class="divination-footer btn-group">
-      <el-button plain @click="handleClearBtnClick">{{ resultVisible ? '重置' : '清空' }}</el-button>
-      <el-button plain @click="divine" v-show="!resultVisible">发书占之</el-button>
+      <el-button plain @click="handleClearBtnClick">{{ isDivined ? '重置' : '清空' }}</el-button>
+      <el-button plain @click="divine" v-show="!isDivined">发书占之</el-button>
       <i class="el-icon-info keybrl-icon-btn lg" @click="tipsPanelVisible = true"></i>
     </div>
 
@@ -58,17 +84,18 @@ export default {
   name: 'Divination',
   data () {
     return {
-      result: {
-        name: null,
-        brief: null,
-        fortune: null,
-        description: null,
-        picture: null,
-        tag: null
-      },
+      // result: {
+      //   name: null,
+      //   brief: null,
+      //   fortune: null,
+      //   description: null,
+      //   picture: null,
+      //   tag: null
+      // },
+      result: results[1],
       tipsPanelVisible: false,
-      resultVisible: false,
-      detailVisible: false,
+      isDivined: true,
+      isResultTextVertical: true,
 
       // 窗口大小改变事件处理器的计时器（用于函数节流）
       windowResizeHandlerTimer: null
@@ -80,6 +107,9 @@ export default {
   },
   methods: {
 
+    /**
+     * 初始化画布
+     */
     initUserCanvas () {
       this.setUserCvSize()
       const cv = this.$refs.userCv
@@ -151,9 +181,22 @@ export default {
       resIndex += parseInt(cvDataSha256.substr(60, 4), 16)
 
       this.result = results[resIndex % 64]
-      this.resultVisible = true
+      this.isDivined = true
 
       console.log(`[INFO] 抽取到第 ${resIndex % 64} 个结果`)
+    },
+
+    /**
+     * 去掉文本中的标点
+     */
+    removePunctuation (sourceText) {
+      if (sourceText === null) {
+        return null
+      }
+
+      let resultText = sourceText
+      resultText = resultText.replace(/[：、，；。《》（）“”]/g, ' ')
+      return resultText
     },
 
     /**
@@ -163,8 +206,7 @@ export default {
      */
     handleClearBtnClick () {
       this.$refs.userCv.height += 0
-      this.resultVisible = false
-      this.detailVisible = false
+      this.isDivined = false
     },
 
     /**
@@ -180,23 +222,30 @@ export default {
 
       // 设置定时器
       this.windowResizeHandlerTimer = setTimeout(() => {
-        that.$message.warning('由于画布大小改变，内容将会清空')
+        if (!this.isDivined) {
+          that.$message.warning('由于画布大小改变，内容将会清空')
+        }
         console.log('[WARNING] 由于画布大小改变，内容将会清空')
         that.setUserCvSize()
       }, 500)
     }
+
   }
 }
 </script>
 
 <style lang="less" scoped>
+  @font-face {
+    font-family: '方正楷体';
+    src: url("/static/fzktk.ttf");
+  }
+
   .divination-main {
     display: flex;
     height: 100vh;
     flex-direction: column;
 
     .main-panel {
-      flex-grow: 1;
       max-height: 650px;
       padding: 10px;
       border-width: 1px;
@@ -204,10 +253,66 @@ export default {
       border-color: #d3d5db;
       border-radius: 5px;
       overflow: hidden;
+      transition: background-color 1s;
 
-      .user-cv-container, .user-cv {
+      .user-cv-container, .result-container, .user-cv {
         width: 100%;
         height: 100%;
+      }
+
+      .result-container {
+        font-family: '方正楷体', serif;
+
+        /* 竖排的结果 */
+        &.vertical {
+          display: flex;
+          flex-direction: row-reverse;
+
+          div {
+            margin: 0 5px;
+
+            /* 竖排文字 */
+            writing-mode:tb-rl;
+            letter-spacing: 2px;
+            line-height: 22px;
+
+            &.result-detail {  /* 卦象描述 */
+              padding-bottom: 32px;
+            }
+            &.result-end {  /* 对齐到底部 */
+              align-self: flex-end;
+              padding-bottom: 16px;
+            }
+            &.result-space {  /* 留白 */
+              flex-grow: 1;
+            }
+          }
+
+          .red {
+            color: #b12524;
+          }
+        }
+
+        /* 横排的结果 */
+        &.horizontal {
+          div {
+            margin: 5px 0 12px;
+            line-height: 28px;
+
+            &.result-end {
+              margin-top: 20px;
+              text-align: right;
+              font-weight: bolder;
+            }
+          }
+        }
+      }
+
+      &.light-yellow-bg {
+        background-color: #e5ddc9;
+      }
+      &.grow {
+        flex-grow: 1;
       }
     }
 
@@ -216,24 +321,4 @@ export default {
     }
   }
 
-  .r-content {
-    display: flex;
-    flex-direction: row-reverse;
-    align-items: flex-start;
-  }
-  .right {
-    margin: 0 3px 0 2px;
-  }
-  .left {
-    padding-top: 19px;
-    align-items: flex-end;
-  }
-  .vertical {
-    /*width: 0;*/
-    writing-mode:tb-rl;
-    letter-spacing: 4px;
-  }
-  .main-panel {
-
-  }
 </style>
