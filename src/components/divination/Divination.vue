@@ -102,7 +102,9 @@ export default {
   },
   mounted () {
     this.initUserCanvas()
-    window.onresize = this.throttledHandleWindowResize
+
+    // 对于某些移动端浏览器有点问题，上下栏会在滑动时自动收起或展开，会频繁触发窗口大小改变，所以暂时禁用
+    // window.onresize = this.throttledHandleWindowResize
   },
   methods: {
 
@@ -142,6 +144,8 @@ export default {
           document.ontouchmove = null
           document.ontouchend = null
         }
+
+        ev.preventDefault()
       }
     },
 
@@ -241,6 +245,8 @@ export default {
     flex-direction: column;
 
     .main-panel {
+      display: flex;
+      flex-direction: column;
       max-height: 650px;
       padding: 10px;
       border-width: 1px;
@@ -250,12 +256,21 @@ export default {
       overflow: hidden;
       transition: background-color 1s;
 
-      .user-cv-container, .result-container, .user-cv {
+      .user-cv-container {
+        display: flex;
+        flex-direction: column;
         width: 100%;
-        height: 100%;
+        flex-grow: 1;
+
+        .user-cv {
+          width: 100%;
+          flex-grow: 1;
+        }
       }
 
       .result-container {
+        width: 100%;
+        flex-grow: 1;
         font-family: '方正楷体', serif;
 
         /* 竖排的结果 */
