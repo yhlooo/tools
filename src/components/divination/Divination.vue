@@ -1,6 +1,9 @@
 <template>
   <div id="divination" class="tool-main-normal divination-main">
 
+    <!-- 字体预加载 -->
+    <link rel="preload" href="/static/fzktk.ttf" as="font">
+
     <!-- 标题 -->
     <h1 class="tool-h1-normal divination-title">知命</h1>
 
