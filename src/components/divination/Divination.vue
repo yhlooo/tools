@@ -263,6 +263,7 @@ export default {
         display: flex;
         flex-direction: column;
         width: 100%;
+        height: 100%;
         flex-grow: 1;
 
         .user-cv {
@@ -273,6 +274,7 @@ export default {
 
       .result-container {
         width: 100%;
+        height: 100%;
         flex-grow: 1;
         font-family: '方正楷体', serif;
 
