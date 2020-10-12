@@ -65,6 +65,15 @@ export default {
           name: 'Maozu',
           url: 'https://github.com/maozu/'
         }
+      }, {
+        name: 'WebFiglet',
+        url: '/web-figlet',
+        title: 'FIGlet',
+        description: '基于 FIGlet ，使用普通字符构建大字母。',
+        author: {
+          name: 'KeybrL',
+          url: 'https://github.com/keybrl/'
+        }
       }]
     }
   },

@@ -4,7 +4,8 @@ import Router from 'vue-router'
 import Index from '@/components/index/Index'
 import Base64Codec from '@/components/base64-codec/Base64Codec'
 import { Fate, Draw, FlipACoin } from '@/components/fate'
-import Divination from '../components/divination/Divination'
+import Divination from '@/components/divination/Divination'
+import WebFiglet from '@/components/web-figlet/WebFiglet'
 
 Vue.use(Router)
 
@@ -47,6 +48,13 @@ const router = new Router({
       component: Divination,
       meta: {
         title: '知命'
+      }
+    }, {
+      path: '/web-figlet',
+      name: 'WebFiglet',
+      component: WebFiglet,
+      meta: {
+        title: 'FIGlet'
       }
     }
   ]
