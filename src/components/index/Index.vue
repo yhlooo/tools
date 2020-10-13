@@ -86,6 +86,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.tool-main-normal {
+  padding-bottom: 80px;
+}
 .tool-card-container {
   padding: 10px;
 
