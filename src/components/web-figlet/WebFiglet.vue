@@ -1,13 +1,9 @@
 <template>
   <div id="web-figlet" class="tool-main-normal">
-    <h1 class="tool-h1-normal" v-show="!figletReadied">FIGlet</h1>
-    <div v-show="figletReadied"><pre class="figlet-title">
-    __________________     __
-   / ____/  _/ ____/ /__  / /_
-  / /_   / // / __/ / _ \/ __/
- / __/ _/ // /_/ / /  __/ /_
-/_/   /___/\____/_/\___/\__/
-    </pre></div>
+    <h1 class="tool-h1-normal">
+      <tool-normal-home-btn></tool-normal-home-btn>
+      FIGlet
+    </h1>
 
     <!-- 输入框 -->
     <div class="source-text-container">
@@ -18,7 +14,7 @@
           slot="prepend"
           v-model="selectedFont"
           @input="refreshTargetText"
-          style="width: 130px;">
+          style="width: 110px;">
           <el-option
             v-for="font in figletFonts"
             :key="font"
@@ -56,6 +52,8 @@
 
 <script>
 import Clipboard from 'clipboard'
+import ToolNormalHomeBtn from '@/libs/ToolNormalHomeBtn'
+
 import * as figlet from 'figlet'
 import banner from 'figlet/importable-fonts/Banner'
 import block from 'figlet/importable-fonts/Block'
@@ -78,6 +76,7 @@ import term from 'figlet/importable-fonts/Term'
 
 export default {
   name: 'WebFiglet',
+  components: { ToolNormalHomeBtn },
   data () {
     return {
       figletReadied: false,
@@ -138,7 +137,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 
   .target-text-size-slider-container {
     margin-bottom: 20px;
@@ -152,19 +151,25 @@ export default {
     border-color: #dcdfe6;
     border-radius: 4px;
 
-    overflow: auto;
-  }
-  .target-text-container::-webkit-scrollbar {
-    height: 0.4em;
-    width: 0.4em;
-    background-color: transparent;
-  }
-  .target-text-container::-webkit-scrollbar-thumb {
-    border-radius: 0.4em;
-    background-color: #939393;
-  }
-  .target-text-container::-webkit-scrollbar-corner {
-    background-color: transparent;
+    .target-text {
+      width: 100%;
+      overflow: auto;
+
+      &::-webkit-scrollbar {
+        height: 8px;
+        width: 8px;
+        background-color: transparent;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        border-radius: 8px;
+        background-color: #939393;
+      }
+
+      &::-webkit-scrollbar-corner {
+        background-color: transparent;
+      }
+    }
   }
 
   .copy-btn-container {
@@ -179,14 +184,9 @@ export default {
     margin: 0;
     font-family: monospace;
     color: #000000;
-  }
-  pre.figlet-title {
-    font-size: 12px;
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
-  pre.target-text {
-    font-size: 2em;
-  }
 
+    .target-text {
+      font-size: 2em;
+    }
+  }
 </style>

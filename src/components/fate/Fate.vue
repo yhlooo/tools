@@ -1,6 +1,7 @@
 <template>
   <div id="fate" class="tool-main-normal">
     <h1 class="tool-h1-normal">
+      <tool-normal-home-btn></tool-normal-home-btn>
       命运 -
       <el-dropdown class="fate-mode-selector" trigger="click" @command="switchMode">
         <span class="el-dropdown-link fate-mode" :style="`color: ${mode.color}`">
@@ -22,8 +23,11 @@
 </template>
 
 <script>
+import ToolNormalHomeBtn from '@/libs/ToolNormalHomeBtn'
+
 export default {
   name: 'Fate',
+  components: { ToolNormalHomeBtn },
   data () {
     return {
       mode: { label: '抛硬币', url: 'flip-a-coin', color: '#29769f' },

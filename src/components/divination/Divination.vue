@@ -5,7 +5,10 @@
     <link rel="preload" href="/static/fzktk.ttf" as="font">
 
     <!-- 标题 -->
-    <h1 class="tool-h1-normal divination-title">知命</h1>
+    <h1 class="tool-h1-normal divination-title">
+      <tool-normal-home-btn></tool-normal-home-btn>
+      知命
+    </h1>
 
     <!-- 主面板 -->
     <div
@@ -82,9 +85,11 @@
 <script>
 import { sha256 } from 'js-sha256'
 import { results } from './results'
+import ToolNormalHomeBtn from '@/libs/ToolNormalHomeBtn'
 
 export default {
   name: 'Divination',
+  components: { ToolNormalHomeBtn },
   data () {
     return {
       result: {

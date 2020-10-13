@@ -1,6 +1,9 @@
 <template>
   <div id="base64-codec" class="tool-main-normal">
-    <h1 class="tool-h1-normal">Base64 编解码器</h1>
+    <h1 class="tool-h1-normal">
+      <tool-normal-home-btn></tool-normal-home-btn>
+      Base64 编解码器
+    </h1>
     <el-form class="base64-codec-form">
       <el-form-item>
         <label class="el-form-item__label">
@@ -35,9 +38,11 @@
 <script>
 import { Base64 } from 'js-base64'
 import Clipboard from 'clipboard'
+import ToolNormalHomeBtn from '@/libs/ToolNormalHomeBtn'
 
 export default {
   name: 'Base64Codec',
+  components: { ToolNormalHomeBtn },
   data () {
     return {
       sourceText: '',
